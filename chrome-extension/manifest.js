@@ -13,9 +13,13 @@ export default {
   ],
   host_permissions: ['<all_urls>'],
   action: {
-    default_title: 'Click to open side panel',
+    default_title: 'NanoBrowser',
   },
   side_panel: {
-    default_path: 'side-panel/index.html',
+    default_path: 'src/pages/side-panel/index.html',
+  },
+  background: {
+    service_worker: 'src/background/index.js',
+    type: 'module',
   },
 };
