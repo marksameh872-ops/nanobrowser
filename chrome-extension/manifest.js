@@ -16,10 +16,10 @@ export default {
     default_title: 'NanoBrowser',
   },
   side_panel: {
-    default_path: 'src/pages/side-panel/index.html',
+    default_path: 'side-panel/index.html',
   },
   background: {
-    service_worker: 'src/background/index.js',
+    service_worker: 'background/index.js',
     type: 'module',
   },
 };
