@@ -11,11 +11,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleVoiceCommand = () => {
-    const windowAuth = window as unknown as {
-      SpeechRecognition?: new () => any;
-      webkitSpeechRecognition?: new () => any;
-    };
-
+    const windowAuth = window as unknown as Record<string, any>;
     const SpeechRecognition = windowAuth.SpeechRecognition || windowAuth.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
@@ -40,7 +36,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
     };
 
     recognition.onerror = () => setIsListening(false);
-
     recognition.start();
   };
 
@@ -60,13 +55,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
   };
 
   return (
-    <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col items-center">
+    <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col items-center w-full">
+      {/* زر المايك للتنفيذ الفوري */}
       <div className="flex flex-col items-center justify-center mb-3">
         <button
           type="button"
           onClick={handleVoiceCommand}
           disabled={isLoading}
-          className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-xl transition-all duration-300 transform active:scale-95 ${
+          className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-md transition-all duration-300 ${
             isListening
               ? 'bg-red-600 text-white animate-pulse ring-4 ring-red-300'
               : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:scale-105'
@@ -76,17 +72,18 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
           🎤
         </button>
         <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">
-          {isListening ? '🎙️ جاري الاستماع إلى أمرك...' : 'اضغط وتحدث وسينفذ فوراً'}
+          {isListening ? '🎙️ جاري الاستماع...' : 'اضغط وتحدث وسينفذ فوراً'}
         </span>
       </div>
 
+      {/* حقل الإدخال النصي */}
       <form onSubmit={handleSubmit} className="w-full flex items-end gap-2">
         <textarea
           ref={textareaRef}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="اكتب أمرك هنا أو استخدم المايك..."
+          placeholder="اكتب أمرك هنا..."
           rows={1}
           disabled={isLoading}
           className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-700 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
