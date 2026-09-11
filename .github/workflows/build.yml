@@ -1,0 +1,34 @@
+name: Build Chrome Extension
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build extension
+        run: pnpm build
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nanobrowser-extension
+          path: dist/
