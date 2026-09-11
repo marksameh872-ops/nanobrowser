@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface ChatInputProps {
   onSendMessage: (text: string) => void;
@@ -10,30 +10,36 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
   const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // التحكم في التسجيل الصوتي والإرسال الفوري
   const handleVoiceCommand = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
+    const windowAuth = window as unknown as {
+      SpeechRecognition?: new () => any;
+      webkitSpeechRecognition?: new () => any;
+    };
+
+    const SpeechRecognition = windowAuth.SpeechRecognition || windowAuth.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
       alert("المتصفح لا يدعم التعرف على الصوت");
       return;
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = 'ar-EG'; // اللغة العربية
+    recognition.lang = 'ar-EG';
     recognition.interimResults = false;
 
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
-    
+
     recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
+      const transcript = event.results?.[0]?.[0]?.transcript;
       if (transcript && transcript.trim() !== '') {
         setInputText(transcript);
-        onSendMessage(transcript); // تنفيذ ورسالة فورية للمساعد
+        onSendMessage(transcript);
         setInputText('');
       }
     };
+
+    recognition.onerror = () => setIsListening(false);
 
     recognition.start();
   };
@@ -55,7 +61,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
 
   return (
     <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col items-center">
-      {/* زر المايك الصوتي الكبير والجميل للتنفيذ الفوري */}
       <div className="flex flex-col items-center justify-center mb-3">
         <button
           type="button"
@@ -75,7 +80,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading =
         </span>
       </div>
 
-      {/* نموذج الإدخال النصي التقليدي */}
       <form onSubmit={handleSubmit} className="w-full flex items-end gap-2">
         <textarea
           ref={textareaRef}
