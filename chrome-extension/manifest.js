@@ -2,6 +2,7 @@ export default {
   manifest_version: 3,
   name: 'NanoBrowser',
   version: '0.1.13',
+  default_locale: 'en',
   description: 'AI-powered web automation Chrome extension',
   permissions: [
     'storage',
