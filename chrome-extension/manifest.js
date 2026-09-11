@@ -16,6 +16,6 @@ export default {
     default_title: 'Click to open side panel',
   },
   side_panel: {
-    default_path: 'pages/side-panel/index.html',
+    default_path: 'side-panel/index.html',
   },
 };
