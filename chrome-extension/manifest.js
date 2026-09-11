@@ -1,16 +1,7 @@
-import { defineManifest } from '@crxjs/vite-plugin';
-import packageJson from './package.json';
+import { defineManifest } from 'wxt';
 
-const { version } = packageJson;
-
-// Convert from semver to x.x.x.x
-const [major, minor, patch, label] = version.replace('-', '.').split('.');
-
-const manifest = defineManifest(async (env) => ({
-  manifest_version: 3,
+export default defineManifest({
   name: 'NanoBrowser',
-  version: `${major}.${minor}.${patch}.${label || '0'}`,
-  version_name: version,
   description: 'AI-powered web automation Chrome extension',
   permissions: [
     'storage',
@@ -27,22 +18,10 @@ const manifest = defineManifest(async (env) => ({
   side_panel: {
     default_path: 'pages/side-panel/index.html',
   },
-  background: {
-    service_worker: 'src/background/index.ts',
-    type: 'module',
-  },
-  content_scripts: [
-    {
-      matches: ['<all_urls>'],
-      js: ['src/content/index.ts'],
-    },
-  ],
   web_accessible_resources: [
     {
       resources: ['assets/*', 'pages/*'],
       matches: ['<all_urls>'],
     },
   ],
-}));
-
-export default manifest;
+});
